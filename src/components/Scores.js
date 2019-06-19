@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 
-const foregroundColor = '#ccc'
+import { foregroundColor } from '../styles/index'
 
 /* PROPS
   score: number
@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
     paddingRight: 25,
   },
   score: {
+    fontSize: 18,
     color: foregroundColor,
   },
 })
