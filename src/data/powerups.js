@@ -6,7 +6,7 @@
  * uBound: number (decimal)
  */
 
-export default [
+module.exports = [
   {
     name: 'Randomize',
     label: () => '?',
@@ -27,5 +27,5 @@ export default [
     description: 'Add to the current number by the amount',
     lBound: 76,
     uBound: 100,
-  },
+  }
 ]
