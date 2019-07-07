@@ -23,10 +23,10 @@ import {
 
 export default class Game extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: 'Predict',
+    title: 'predict',
     headerRight: (
       <Button
-        onPress={() => navigation.navigate('Details')}
+        onPress={() => navigation.navigate('Settings')}
         title="Settings"
         color={backgroundColor}
       />
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor,
-    alignItems: 'center',
+    alignItems: 'stretch',
     justifyContent: 'center',
     flexDirection: 'column',
   },

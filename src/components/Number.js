@@ -47,6 +47,9 @@ export default class Number extends React.Component {
       number: {
         fontSize: 100,
         color,
+        textShadowOffset: { width: -5, height: 5 },
+        // textShadowRadius: 10,
+        textShadowColor: '#000',
       }
     })
 

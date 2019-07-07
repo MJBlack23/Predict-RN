@@ -2,7 +2,7 @@ import React from 'react'
 
 import { TouchableOpacity, Text, StyleSheet } from 'react-native'
 
-import { foregroundColor } from '../../styles/index'
+import { tertiaryColor, backgroundColor } from '../../styles/index'
 
 /** PROPS
  * onPress: function
@@ -26,9 +26,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: tertiaryColor,
+    margin: 15,
   },
   button: {
-    color: foregroundColor,
+    color: backgroundColor,
     fontSize: 30,
+    fontWeight: 'bold',
   },
 })

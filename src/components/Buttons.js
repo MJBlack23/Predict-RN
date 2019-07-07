@@ -1,8 +1,6 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 
-import { tertiaryColor } from '../styles/index'
-
 import Button from './common/TouchableButton'
 
 /** PROPS
@@ -14,23 +12,19 @@ import Button from './common/TouchableButton'
    <View style={styles.container}>
     <Button
       onPress={props.guessAbove}
-      label="Higher"
+      label="higher"
     />
-    <View style={styles.horizontalRule} />
+
     <Button
       onPress={props.guessBelow}
-      label="Lower"
+      label="lower"
     />
    </View>
  )
 
 const styles = StyleSheet.create({
   container: {
-    flex: 4
-  },
-  horizontalRule: {
-    borderBottomColor: tertiaryColor,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    alignSelf: 'stretch'
+    flex: 4,
+    flexDirection: 'column',
   },
 })

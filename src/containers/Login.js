@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, TextInput } from 'react-native'
+import { View, Text, StyleSheet, AsyncStorage } from 'react-native'
 
 import { backgroundColor, foregroundColor } from '../styles/index'
 
@@ -7,26 +7,29 @@ import Input from '../components/common/Input'
 import Button from '../components/common/TouchableButton'
 
 export default class Login extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      email: '',
-      password: '',
-    }
-
-    this.handleChange = this.handleChange.bind(this)
+  static navigationOptions = {
+    title: 'Login to continue'
   }
 
-    handleChange(key) {
-      const self = this
-      return (text) => {
-        self.setState(() => ({
-          ...self.state,
-          [key]: text
-        }))
-      }
+  state = {
+    email: '',
+    password: '',
+  }
+
+  _logInAsync = async () => {
+    await AsyncStorage.setItem('userToken', 'abc')
+    this.props.navigation.navigate('App')
+  }
+
+  handleChange = (key) => {
+    const self = this
+    return (text) => {
+      self.setState(() => ({
+        ...self.state,
+        [key]: text
+      }))
     }
+  }
 
   render() {
     return (
@@ -35,12 +38,6 @@ export default class Login extends React.Component {
         <View style={styles.banner}>
           <Text style={styles.header}>
             Predict
-          </Text>
-        </View>
-
-        <View style={styles.instructionsContainer}>
-          <Text style={styles.text}>
-            Login to continue
           </Text>
         </View>
 
@@ -57,7 +54,7 @@ export default class Login extends React.Component {
 
         <View style={styles.instructionsContainer}>
          <Button
-          onPress={this.props.onLogin}
+          onPress={this._logInAsync}
           label="Log in"
          />
         </View>

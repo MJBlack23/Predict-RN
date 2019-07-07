@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 
-import { foregroundColor } from '../styles/index'
+import { foregroundColor, tertiaryColor } from '../styles/index'
 
 /* PROPS
   score: number
@@ -17,14 +17,19 @@ export default (props) => (
         <Text style={styles.score}>
           High Score:
           {' '}
-          {props.highScore}
+          <Text style={styles.number}>
+            {props.highScore}
+          </Text>
+          
         </Text>
       </View>
       <View>
         <Text style={styles.score}>
           Score:
           {' '}
-          {props.score}
+          <Text style={styles.number}>
+            {props.score}
+          </Text>
         </Text>
       </View>
     </View>
@@ -34,14 +39,18 @@ export default (props) => (
         <Text style={styles.score}>
           Lives
           {' '}
-          {props.lives}
+          <Text style={styles.number}>
+            {props.lives}
+          </Text>
         </Text>
       </View>
       <View>
         <Text style={styles.score}>
           Streak
           {' '}
-          {props.streak}
+          <Text style={styles.number}>
+            {props.streak}
+          </Text>
         </Text>
       </View>
     </View>
@@ -74,4 +83,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: foregroundColor,
   },
+  number: {
+    fontSize: 20,
+    color: tertiaryColor,
+  }
 })
