@@ -18,6 +18,7 @@ import {
   incrementLives,
   generatePowerup,
   guessCorrect,
+  appendPowerup,
 } from '../util/game'
 
 export default class Game extends React.Component {
@@ -32,170 +33,134 @@ export default class Game extends React.Component {
     )
   })
 
-  constructor() {
-    super()
-
-    this.state = {
-      currentNumber: generateNumber(),
-      score: 0,
-      highScore: 0,
-      lives: 0,
-      streak: 0,
-      powerups: [],
-      wrong: false,
-    }
-
-    this.makeGuess = this.makeGuess.bind(this)
-    this.usePowerup = this.usePowerup.bind(this)
-    this.updateScores = this.updateScores.bind(this)
+  state = {
+    currentNumber: generateNumber(),
+    score: 0,
+    highScore: 0,
+    lives: 0,
+    streak: 0,
+    powerups: [],
+    wrong: false,
   }
-
-  
-  
 
   /** Guessing methods */
   guessAbove = () => this.makeGuess('higher')
   guessBelow = () => this.makeGuess('lower')
 
 
-  
-  /** Powerup methods */
-  appendPowerup(score, powerups = []) {
-    if (powerups.length >= rules.maxPowerups || score % (rules.gainPowerup * (powerups.length + 1)) !== 0) {
-      return powerups
-    }
+  handleCorrectGuess = (nextNumber = 0) => {
+    // Increment Score and Streak
+    const score = this.state.score + 1
+    const streak = this.state.streak + 1
 
-    powerups.push(generatePowerup(powerups.length))
+    // Update the current number to null to allow the next update to trigger
+    // The render animation of the number
+    this.setState(() => ({
+      ...this.state,
+      currentNumber: null,
+      wrong: false,
+      score,
+      streak,
+      lives: incrementLives(rules)(streak, this.state.lives),
+      powerups: appendPowerup(rules, generatePowerup(rules, generateNumber, powerups))(score, this.state.powerups)
+    }))
 
-    return powerups
-    .filter(p => p !== null)
-    .map((p, id) => ({ ...p, id }))
+    // After the interval update the state with the new information
+    setTimeout(() => this.updateNumber(nextNumber), 100)
   }
 
-  usePowerup(powerup) {
+  handleUseLife = (nextNumber = 0) => {
+    // Update the wrong boolean to render the number in red to indicate
+    // the guess was wrong
+    this.setIsWrong()
+
+    // After a short interval, set the current number to null to allow
+    // the render animation
+    setTimeout(() => {
+      this.setState(() => ({
+        ...this.state,
+        currentNumber: null,
+        wrong: false,
+        streak: 0,
+        lives: this.state.lives - 1,
+      }))
+    }, 250)
+
+    // Reset the new number to trigger the render animation
+    setTimeout(() => this.updateNumber(nextNumber), 500)
+  }
+
+  handleResetScore = (nextNumber = 0) => {
+    // Update the wrong boolean to render the number in red to indicate
+    // the guess was wrong
+    this.setIsWrong()
+
+    // update the scores and set the currentnumber to null toa allow the re-render
+    // animation
+    setTimeout(() => {
+      this.setState(() => ({
+        ...this.state,
+        currentNumber: null,
+        score: 0,
+        streak: 0,
+        highScore: this.state.score > this.state.highScore ? this.state.score : this.state.highScore,
+        wrong: true,
+      }))
+    }, 250)
+    
+    // Reset the new number to trigger the render animation
+    setTimeout(() => this.updateNumber(nextNumber), 500)
+  }
+
+  setIsWrong = () => this.setState(() => ({ ...this.state, wrong: true }))
+
+  updateNumber = (currentNumber) => this.setState(() => ({
+    ...this.state,
+    wrong: false,
+    currentNumber,
+  }))
+
+
+  
+  /** Powerup methods */
+  usePowerup = (powerup) => {
     const self = this
 
     return () => {
+      // Update current number to null to allow the
+      // render animation
+      self.setState(() => ({
+        currentNumber: null,
+        powerups: self.state.powerups.filter((p => p.id !== powerup.id)),
+      }))
+
       switch (powerup.name) {
         case 'Randomize':
-
-
-          self.setState(() => ({
-            powerups: self.state.powerups.filter((p => p.id !== powerup.id)),
-          }))
-
-          // self.updateNumber(self)
+          setTimeout(() => self.updateNumber(generateNumber()), 250)
 
           break;
         case 'Add':
 
         case 'Subtract':
-          self.setState(() => ({
-            ...self.state,
-            currentNumber: self.state.currentNumber + parseInt(powerup.label, 10),
-            powerups: self.state.powerups.filter((p => p.id !== powerup.id)),
-          }))
+          const newNumber = self.state.currentNumber + parseInt(powerup.label, 10)
+          setTimeout(() => self.updateNumber(newNumber), 250)
           break;
       }
     }
   }
 
-  updateNumber = (self, currentNumber = null, interval = 100) => {
-    // self.setState(() => ({
-    //   ...self.state,
-    //   currentNumber: null,
-    // }))
-
-    setTimeout(function () {
-      self.setState(() => ({
-        ...self.state,
-        currentNumber: currentNumber !== null ? currentNumber : generateNumber(),
-      }))
-    }, interval)
-  }
-
-  updateScores(guess, currentNumber) {
-    const self = this
-
-    
-  }
-
   makeGuess(guess = 'higher') {
     const { currentNumber } = this.state
-    const self = this
     const nextNumber = generateNumber()
 
     if (guessCorrect(guess, currentNumber, nextNumber)) {
-      const score = self.state.score + 1
-      const streak = self.state.streak + 1
-
-      self.setState(() => ({
-        ...self.state,
-        currentNumber: null,
-        wrong: false,
-      }))
-
-      setTimeout(() => {
-        self.setState(() => ({
-          ...self.state,
-          currentNumber: nextNumber,
-          score,
-          streak,
-          lives: incrementLives(rules)(streak, self.state.lives),
-          powerups: self.appendPowerup(score, self.state.powerups)
-        }))
-      }, 100)
-    } else if (self.state.lives > 0) {
-
-      self.setState(() => ({
-        ...self.state,
-        wrong: true,
-      }))
-
-      setTimeout(() => {
-        self.setState(() => ({
-          ...self.state,
-          currentNumber: null,
-          wrong: false,
-        }))
-      }, 250)
-
-      setTimeout(() => {
-        self.setState(() => ({
-          ...self.state,
-          currentNumber: nextNumber,
-          streak: 0,
-          lives: self.state.lives - 1,
-        }))
-      }, 500)
+      this.handleCorrectGuess(nextNumber)
+    } else if (this.state.lives > 0) {
+      this.handleUseLife(nextNumber)
     } else {
-      // hard reset
-      self.setState(() => ({
-        ...self.state,
-        wrong: true,
-      }))
-
-      setTimeout(() => {
-        self.setState(() => ({
-          ...self.state,
-          currentNumber: null,
-          wrong: false,
-        }))
-      }, 250)
-
-      setTimeout(() => {
-        self.setState(() => ({
-          ...self.state,
-          currentNumber: nextNumber,
-          score: 0,
-          streak: 0,
-          highScore: self.state.score > self.state.highScore ? self.state.score : self.state.highScore,
-        }))
-      }, 500)
+      this.handleResetScore(nextNumber)
     }
   }
-
-
 
   render() {
     return (

@@ -5,30 +5,32 @@ const guessCorrect = (guess = 'higher', currentNumber = 0, nextNumber = 0) =>
   guess === 'higher' && nextNumber >= currentNumber ||
   guess === 'lower' && nextNumber <= currentNumber
 
-const generatePowerup = (rules, generator) => powerups => {
-  const seed = generator()
+const generatePowerup = (rules, generator, powerups) => {
+  return () => {
+    const seed = generator()
 
-  const powerupBuilder = powerups.find(powerup => (
-    seed >= powerup.lBound && seed <= powerup.uBound
-  ))
+    const powerupBuilder = powerups.find(powerup => (
+      seed >= powerup.lBound && seed <= powerup.uBound
+    ))
 
-  if (powerupBuilder === undefined) {
-    return null
+    if (powerupBuilder === undefined) {
+      return null
+    }
+
+    return Object.assign({},
+      powerupBuilder,
+      {
+        label: powerupBuilder.label(generator(rules.powerupUpperBound, rules.powerupLowerBound))
+      })
   }
-
-  return Object.assign({},
-    powerupBuilder,
-    {
-      label: powerupBuilder.label(generator(rules.powerupUpperBound, rules.powerupLowerBound))
-    })
 }
 
-const appendPowerup = (rules, generatePowerup) => (score, powerups = []) => {
+const appendPowerup = (rules, genPowerup) => (score, powerups = []) => {
   if (powerups.length >= rules.maxPowerups || score % (rules.gainPowerup * (powerups.length + 1)) !== 0) {
     return powerups
   }
 
-  powerups.push(generatePowerup(powerups))
+  powerups.push(genPowerup())
 
   return powerups
     .filter(p => p !== null)

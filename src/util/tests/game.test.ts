@@ -35,22 +35,22 @@ describe('Game Helpers', () => {
     }
 
     it('should return a Randomize powerup on a 1 - 50', () => {
-      expect(gameHelpers.generatePowerup(rules, () => 1)(powerups).name).to.equal('Randomize')
-      expect(gameHelpers.generatePowerup(rules, () => 50)(powerups).name).to.equal('Randomize')
+      expect(gameHelpers.generatePowerup(rules, () => 1, powerups)().name).to.equal('Randomize')
+      expect(gameHelpers.generatePowerup(rules, () => 50, powerups)().name).to.equal('Randomize')
     })
 
     it('should return a Subtract on a 51 to 75', () => {
-      expect(gameHelpers.generatePowerup(rules, () => 51)(powerups).name).to.equal('Subtract')
-      expect(gameHelpers.generatePowerup(rules, () => 75)(powerups).name).to.equal('Subtract')
+      expect(gameHelpers.generatePowerup(rules, () => 51, powerups)().name).to.equal('Subtract')
+      expect(gameHelpers.generatePowerup(rules, () => 75, powerups)().name).to.equal('Subtract')
     })
 
     it('should return an Add on a 76 to 100', () => {
-      expect(gameHelpers.generatePowerup(rules, () => 76)(powerups).name).to.equal('Add')
-      expect(gameHelpers.generatePowerup(rules, () => 100)(powerups).name).to.equal('Add')
+      expect(gameHelpers.generatePowerup(rules, () => 76, powerups)().name).to.equal('Add')
+      expect(gameHelpers.generatePowerup(rules, () => 100, powerups)().name).to.equal('Add')
     })
 
     it('should return null if above 100', () => {
-      expect(gameHelpers.generatePowerup(rules, () => 101)(powerups)).to.be.null
+      expect(gameHelpers.generatePowerup(rules, () => 101, powerups)()).to.be.null
     })
   })
 
