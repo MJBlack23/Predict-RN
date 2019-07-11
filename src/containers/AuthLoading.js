@@ -7,6 +7,8 @@ import {
   View,
 } from 'react-native'
 
+import firebase from '../util/firebase'
+
 export default class AuthLoadingScreen extends React.Component {
   constructor(props) {
     super(props)
@@ -16,9 +18,30 @@ export default class AuthLoadingScreen extends React.Component {
   
   // Fetch the token from storage then navigate to correct place
   _bootstrapAsync = async () => {
-    const userToken = await AsyncStorage.getItem('userToken')
+    firebase.auth().onAuthStateChanged(async user => {
+      try {
+        if ({ user }) {
+          await AsyncStorage.setItem('user', JSON.stringify({
+            displayName: user.displayName ? user.displayName : '',
+            email: user.email || '',
+            emailVerified: user.emailVerified,
+            photoUrl: user.photoUrl || '',
+            uid: user.uid,
+          }))
 
-    this.props.navigation.navigate(userToken ? 'App' : 'Auth')
+          this.props.navigation.navigate('App')
+        } else {
+          await AsyncStorage.clear()
+          this.props.navigation.navigate('Auth')
+        }
+      } catch (error) {
+        this.props.navigation.navigate('Auth')
+      }
+    })
+
+    const user = await AsyncStorage.getItem('user')
+
+    this.props.navigation.navigate(user ? 'App' : 'Auth')
   }
 
   render() {

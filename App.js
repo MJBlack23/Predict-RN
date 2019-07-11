@@ -10,31 +10,25 @@ import { foregroundColor, backgroundColor } from './src/styles/index'
 
 // Import Components
 import AuthLoading from './src/containers/AuthLoading'
-import Settings from './src/containers/Settings'
+import Drawer from './src/containers/Drawer'
 import Game from './src/containers/Game'
-import Login from './src/containers/Login'
+import Signin from './src/containers/SignIn'
+import Signup from './src/containers/SignUp'
 
-const AppNavigator = createStackNavigator({
+const AppNavigator = createDrawerNavigator({
   Home: Game,
-  Settings: Settings,
 }, {
   initialRouteName: 'Home',
-  defaultNavigationOptions: {
-    headerStyle: {
-      backgroundColor,
-    },
-    headerTintColor: foregroundColor,
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
-  }
+  contentComponent: Drawer,
 })
 
-const LoginNavigator = createStackNavigator(
+const SigninNavigator = createStackNavigator(
   {
-    Login: Login,
+    Signin: Signin,
+    Signup: Signup,
   }, 
   {
+    initialRouteName: 'Signin',
     defaultNavigationOptions: {
       headerStyle: {
         backgroundColor,
@@ -51,7 +45,7 @@ const AppContainer = createAppContainer(createSwitchNavigator(
   {
     AuthLoading: AuthLoading,
     App: AppNavigator,
-    Auth: LoginNavigator
+    Auth: SigninNavigator
   },
   {
     initialRouteName: 'AuthLoading'
@@ -61,39 +55,3 @@ const AppContainer = createAppContainer(createSwitchNavigator(
 export default () => (
   <AppContainer />
 )
-// export default class App extends React.Component {
-//   state = {
-//     authed: true,
-//   }
-
-//   componentDidMount() {
-//     // this.props.navigation.setParams({
-//     //   logout: this.logout
-//     // })
-//   }
-
-//   onLogin = () => {
-//     this.setState(() => ({
-//       ...this.state,
-//       authed: !this.state.authed
-//     }))
-//   }
-
-//   logout = () => {
-//     this.setState(() => ({
-//       ...this.state,
-//       authed: false,
-//     }))
-//   }
-  
-//   render() {
-//     return (
-//       this.state.authed ? (
-//         <AppContainer />
-//       ) :
-//       <Login onLogin={this.onLogin} />
-//     )
-//   }
-  
-// }
-

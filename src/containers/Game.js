@@ -142,7 +142,18 @@ export default class Game extends React.Component {
         case 'Add':
 
         case 'Subtract':
-          const newNumber = self.state.currentNumber + parseInt(powerup.label, 10)
+          const newNumber = (() => {
+            const tempNumber = self.state.currentNumber + parseInt(powerup.label, 10)
+
+            if (tempNumber < 1) {
+              return 1
+            } else if (tempNumber > 100) {
+              return 100
+            }
+
+            return tempNumber
+          })()
+
           setTimeout(() => self.updateNumber(newNumber), 250)
           break;
       }

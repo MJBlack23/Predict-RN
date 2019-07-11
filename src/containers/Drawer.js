@@ -7,7 +7,9 @@ import {
   AsyncStorage
 } from 'react-native'
 
-import { backgroundColor, foregroundColor } from '../styles/index'
+import { backgroundColor, foregroundColor, tertiaryColor } from '../styles/index'
+
+import { signOut } from '../util/firebase'
 
 export default class Settings extends React.Component {
   static navigationOptions = {
@@ -15,17 +17,29 @@ export default class Settings extends React.Component {
   }
 
   handleLogOut = async () => {
-    await AsyncStorage.clear()
-    this.props.navigation.navigate('Auth')
+    try {
+      await signOut()
+      await AsyncStorage.clear()
+      this.props.navigation.navigate('Auth')
+    } catch (error) {
+
+    }
+    
   }
 
   render() {
     return (
       <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>
+            predict
+          </Text>
+        </View>
+        
         <TouchableOpacity
           onPress={this.handleLogOut}
         >
-          <Text style={styles.text}>Log Out</Text>
+          <Text style={styles.text}>Sign Out</Text>
         </TouchableOpacity>
       </View>
     )
@@ -37,7 +51,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor,
     alignItems: 'center',
-    justifyContent: 'center',
+    paddingTop: 25,
+  },
+  header: {
+    // alignSelf: 'flex-start'
+  },
+  headerText: {
+    fontSize: 36,
+    color: tertiaryColor,
   },
   text: {
     fontSize: 24,

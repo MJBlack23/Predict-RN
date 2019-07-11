@@ -7,6 +7,7 @@ import { foregroundColor } from '../../styles/index'
  * onChange: function
  * label: string
  * value: string
+ * textContentType: boolean
  */
 
 export default (props) => (
@@ -18,6 +19,7 @@ export default (props) => (
       style={styles.input}
       value={props.value}
       onChangeText={props.onChange}
+      secureTextEntry={props.secureTextEntry === undefined ? false : props.secureTextEntry }
     />
   </View>
 )
