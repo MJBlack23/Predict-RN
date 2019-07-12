@@ -1,4 +1,5 @@
 import * as firebase from 'firebase'
+import 'firebase/firestore'
 import env from './env'
 
 const firebaseConfig = {
@@ -27,3 +28,7 @@ export const signOut = async () =>
   firebase.auth().signOut()
 
 export const onAuthStateChanged = firebase.auth().onAuthStateChanged
+
+export const saveHighScore = (uid = '', highScore = 0) =>
+  firebase.firestore().collection('highScores').doc(uid)
+    .set({ highScore })

@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet, Button } from 'react-native'
+import { View, StyleSheet, Button, AsyncStorage } from 'react-native'
 
 import { foregroundColor, backgroundColor } from '../styles/index'
 import powerups from '../data/powerups'
@@ -10,6 +10,8 @@ import Scores from '../components/Scores'
 import Buttons from '../components/Buttons'
 import Number from '../components/Number'
 import Powerups from '../components/Powerups'
+
+import { saveHighScore } from '../util/firebase'
 
 
 // Helper functions
@@ -95,6 +97,16 @@ export default class Game extends React.Component {
     // the guess was wrong
     this.setIsWrong()
 
+    const highScore = this.state.score > this.state.highScore ? this.state.score : this.state.highScore
+
+    AsyncStorage.getItem('user')
+      .then(JSON.parse)
+      .then(user => saveHighScore(user.uid, highScore))
+      .catch(error => {
+        //
+        alert(error.message)
+      })
+
     // update the scores and set the currentnumber to null toa allow the re-render
     // animation
     setTimeout(() => {
@@ -103,7 +115,7 @@ export default class Game extends React.Component {
         currentNumber: null,
         score: 0,
         streak: 0,
-        highScore: this.state.score > this.state.highScore ? this.state.score : this.state.highScore,
+        highScore,
         wrong: true,
       }))
     }, 250)
