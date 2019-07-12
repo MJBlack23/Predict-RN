@@ -32,3 +32,6 @@ export const onAuthStateChanged = firebase.auth().onAuthStateChanged
 export const saveHighScore = (uid = '', highScore = 0) =>
   firebase.firestore().collection('highScores').doc(uid)
     .set({ highScore })
+
+export const readHighScore = (uid = '') =>
+  firebase.firestore().collection('highScores').doc(uid).get()

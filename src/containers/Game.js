@@ -11,7 +11,7 @@ import Buttons from '../components/Buttons'
 import Number from '../components/Number'
 import Powerups from '../components/Powerups'
 
-import { saveHighScore } from '../util/firebase'
+import { saveHighScore, readHighScore } from '../util/firebase'
 
 
 // Helper functions
@@ -35,14 +35,46 @@ export default class Game extends React.Component {
     )
   })
 
-  state = {
-    currentNumber: generateNumber(),
-    score: 0,
-    highScore: 0,
-    lives: 0,
-    streak: 0,
-    powerups: [],
-    wrong: false,
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      currentNumber: null,
+      score: 0,
+      highScore: 0,
+      lives: 0,
+      streak: 0,
+      powerups: [],
+      wrong: false,
+      uid: '',
+    }
+  }
+
+  
+
+  componentWillMount() {
+    AsyncStorage.getItem('user')
+      .then(JSON.parse)
+      .then(user => {
+        const uid = user.uid
+
+        readHighScore(uid)
+          .then(doc => {
+            if (doc.exists) {
+              const { highScore } = doc.data()
+
+              this.setState(() => ({
+                ...this.state,
+                currentNumber: generateNumber(),
+                uid,
+                highScore,
+              }))
+            }
+          })
+          .catch(error => {
+            alert(error.message)
+          })
+      })
   }
 
   /** Guessing methods */
@@ -99,9 +131,7 @@ export default class Game extends React.Component {
 
     const highScore = this.state.score > this.state.highScore ? this.state.score : this.state.highScore
 
-    AsyncStorage.getItem('user')
-      .then(JSON.parse)
-      .then(user => saveHighScore(user.uid, highScore))
+    saveHighScore(this.state.uid, highScore)
       .catch(error => {
         //
         alert(error.message)
