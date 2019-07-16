@@ -35,8 +35,23 @@ export default class Settings extends React.Component {
             predict
           </Text>
         </View>
+
+        <TouchableOpacity
+          style={styles.clickable}
+          onPress={() => this.props.navigation.navigate('Profile')}
+        >
+          <Text style={styles.text}>Profile</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.clickable}
+          onPress={() => this.props.navigation.navigate('Home')}
+        >
+          <Text style={styles.text}>Game</Text>
+        </TouchableOpacity>
         
         <TouchableOpacity
+          style={styles.clickable}
           onPress={this.handleLogOut}
         >
           <Text style={styles.text}>Sign Out</Text>
@@ -50,11 +65,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor,
-    alignItems: 'center',
+    alignItems: 'stretch',
+    justifyContent: 'flex-start',
     paddingTop: 25,
   },
   header: {
     // alignSelf: 'flex-start'
+    marginBottom: 15
+  },
+  clickable: {
+    padding: 10,
+    borderBottomColor: foregroundColor,
+    borderBottomWidth: 1,
+    // borderTopColor: foregroundColor,
+    // borderTopWidth: 1,
   },
   headerText: {
     fontSize: 36,

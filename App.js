@@ -9,14 +9,18 @@ import {
 import { foregroundColor, backgroundColor } from './src/styles/index'
 
 // Import Components
-import AuthLoading from './src/containers/AuthLoading'
 import Drawer from './src/containers/Drawer'
 import Game from './src/containers/Game'
+import Profile from './src/containers/Profile'
+
+// Auth Components
+import AuthLoading from './src/containers/AuthLoading'
 import Signin from './src/containers/SignIn'
 import Signup from './src/containers/SignUp'
 
 const AppNavigator = createDrawerNavigator({
   Home: Game,
+  Profile,
 }, {
   initialRouteName: 'Home',
   contentComponent: Drawer,
