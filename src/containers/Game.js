@@ -59,18 +59,38 @@ export default class Game extends React.Component {
         const uid = user.uid
 
         readHighScore(uid)
-          .then(doc => {
-            if (doc.exists) {
-              const { highScore } = doc.data()
+          .then(document => {
+            const highScore = ((doc) => {
+              if (doc.exists) {
+                return doc.data().highScore
+              }
 
+              return this.state.highScore
+            })(document)
+            
               this.setState(() => ({
                 ...this.state,
                 currentNumber: generateNumber(),
                 uid,
                 highScore,
               }))
-            }
+            
           })
+          .catch(error => {
+            alert(error.message)
+          })
+      })
+  }
+
+  componentWillUnmount() {
+    AsyncStorage.getItem('user')
+      .then(JSON.parse)
+      .then(user => {
+        const uid = user.uid
+
+        const highScore = this.state.score > this.state.highScore ? this.state.score : this.state.highScore
+
+        saveHighScore(this.state.uid, highScore)
           .catch(error => {
             alert(error.message)
           })
@@ -133,7 +153,6 @@ export default class Game extends React.Component {
 
     saveHighScore(this.state.uid, highScore)
       .catch(error => {
-        //
         alert(error.message)
       })
 

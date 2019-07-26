@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, AsyncStorage } from 'react-native'
+import { View, Text, StyleSheet, KeyboardAvoidingView } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { backgroundColor, foregroundColor } from '../styles/index'
@@ -59,7 +59,11 @@ export default class Signin extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior='height'
+        enabled
+      >
 
         <View style={styles.banner}>
           <Text style={styles.header}>
@@ -92,7 +96,7 @@ export default class Signin extends React.Component {
           label="Sign in"
          />
         </View>
-      </View>
+      </KeyboardAvoidingView>
     )
   }
 }
