@@ -14,6 +14,10 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig)
 
+const tables = {
+  users: 'users'
+}
+
 export default firebase
 
 // TODO: should just return the user or throw an error
@@ -30,8 +34,8 @@ export const signOut = async () =>
 export const onAuthStateChanged = firebase.auth().onAuthStateChanged
 
 export const saveHighScore = (uid = '', highScore = 0) =>
-  firebase.firestore().collection('highScores').doc(uid)
+  firebase.firestore().collection(tables.users).doc(uid)
     .set({ highScore })
 
 export const readHighScore = (uid = '') =>
-  firebase.firestore().collection('highScores').doc(uid).get()
+  firebase.firestore().collection(tables.users).doc(uid).get()

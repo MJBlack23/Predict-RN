@@ -70,7 +70,9 @@ const styles = StyleSheet.create({
     paddingTop: 25,
   },
   header: {
-    // alignSelf: 'flex-start'
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: 15
   },
   clickable: {
