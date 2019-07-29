@@ -20,11 +20,10 @@ const tables = {
 
 export default firebase
 
-// TODO: should just return the user or throw an error
+
 export const createUserWithPassword = (email, password) =>
   firebase.auth().createUserWithEmailAndPassword(email, password)
 
-// TODO: see above
 export const signInWithPassword = async (email, password) => 
   firebase.auth().signInWithEmailAndPassword(email, password)
 
@@ -35,7 +34,11 @@ export const onAuthStateChanged = firebase.auth().onAuthStateChanged
 
 export const saveHighScore = (uid = '', highScore = 0) =>
   firebase.firestore().collection(tables.users).doc(uid)
-    .set({ highScore })
+    .update({ highScore })
 
 export const readHighScore = (uid = '') =>
   firebase.firestore().collection(tables.users).doc(uid).get()
+
+export const updateUserValue = (uid = '', values) =>
+  firebase.firestore().collection(tables.users).doc(uid)
+    .update(values)

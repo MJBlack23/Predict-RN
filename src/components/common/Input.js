@@ -7,7 +7,7 @@ import { foregroundColor } from '../../styles/index'
  * onChange: function
  * label: string
  * value: string
- * textContentType: boolean
+ * secureTextEntry: boolean
  */
 
 export default (props) => (
