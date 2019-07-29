@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet, Button, AsyncStorage } from 'react-native'
+import { View, Text, StyleSheet, Button, AsyncStorage } from 'react-native'
 
 import { foregroundColor, backgroundColor } from '../styles/index'
 import powerups from '../data/powerups'
@@ -10,6 +10,7 @@ import Scores from '../components/Scores'
 import Buttons from '../components/Buttons'
 import Number from '../components/Number'
 import Powerups from '../components/Powerups'
+import Countdown from '../components/Countdown'
 
 import { saveHighScore, readHighScore } from '../util/firebase'
 
@@ -47,10 +48,10 @@ export default class Game extends React.Component {
       powerups: [],
       wrong: false,
       uid: '',
+      countDown: 10,
+      interval: null,
     }
   }
-
-  
 
   componentWillMount() {
     AsyncStorage.getItem('user')
@@ -68,12 +69,14 @@ export default class Game extends React.Component {
               return this.state.highScore
             })(document)
             
-              this.setState(() => ({
-                ...this.state,
-                currentNumber: generateNumber(),
-                uid,
-                highScore,
-              }))
+            this.setState(() => ({
+              ...this.state,
+              currentNumber: generateNumber(),
+              uid,
+              highScore,
+            }))
+
+            // this.refreshTimer()
             
           })
           .catch(error => {
@@ -83,18 +86,39 @@ export default class Game extends React.Component {
   }
 
   componentWillUnmount() {
-    AsyncStorage.getItem('user')
-      .then(JSON.parse)
-      .then(user => {
-        const uid = user.uid
+    const highScore = this.state.score > this.state.highScore ? this.state.score : this.state.highScore
 
-        const highScore = this.state.score > this.state.highScore ? this.state.score : this.state.highScore
-
-        saveHighScore(this.state.uid, highScore)
-          .catch(error => {
-            alert(error.message)
-          })
+    saveHighScore(this.state.uid, highScore)
+      .catch(error => {
+        alert(error.message)
       })
+
+    clearInterval(this.state.interval)
+  }
+
+  refreshTimer = () => {
+    clearInterval(this.state.interval)
+
+    const interval = setInterval(() => {
+      const { countDown } = this.state
+
+      if (countDown <= 0) {
+        this.handleResetScore()
+      } else {
+        this.setState(() => ({
+          ...this.state,
+          countDown: countDown - 1,
+        }))
+      }
+
+      
+    }, 1000)
+
+    this.setState(() => ({
+      ...this.state,
+      countDown: 10,
+      interval,
+    }))
   }
 
   /** Guessing methods */
@@ -256,6 +280,9 @@ export default class Game extends React.Component {
           usePowerup={this.usePowerup}
         />
 
+        <Countdown 
+          countDown={this.state.countDown}
+        />
         <Buttons
           guessAbove={this.guessAbove}
           guessBelow={this.guessBelow}

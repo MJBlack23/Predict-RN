@@ -22,7 +22,7 @@ const AppNavigator = createDrawerNavigator({
   Home: Game,
   Profile,
 }, {
-  initialRouteName: 'Profile',
+  initialRouteName: 'Home',
   contentComponent: Drawer,
 })
 
